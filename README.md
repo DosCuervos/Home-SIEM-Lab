@@ -1,6 +1,6 @@
-# Home SIEM Lab — Detection Engineering on the Elastic Stack
+# Home SIEM Lab - Detection Engineering on the Elastic Stack
 
-An end-to-end SIEM built from scratch to practice the core analyst loop: collect logs, establish a normal baseline, generate attacks, write detections, and catch a brute-force attempt — building and debugging every layer by hand.
+An end-to-end SIEM built from scratch to practice the core analyst loop: collect logs, establish a normal baseline, generate attacks, write detections, and catch a brute-force attempt while building and debugging every layer by hand.
 
 ## Objective
 Build a working SIEM to practice log collection, detection engineering, and the triage reasoning that separates real attacks from everyday noise.
@@ -13,14 +13,14 @@ Build a working SIEM to practice log collection, detection engineering, and the 
 ## Build Log
 
 ### VM Setup
-Two Ubuntu Server VMs, one job each. I went with Server instead of Desktop because that's how the real thing runs — production log servers are headless. No GUI eating up RAM that the log stack needs, less installed means less attack surface, and it forced me to do everything from the command line, which is the actual skill for managing these. The graphical side comes from Kibana's web console later, not from a desktop sitting on the server.
+Two Ubuntu Server VMs, one job each. I went with Server instead of Desktop because that's how the real thing runs, production log servers are headless. No GUI eating up RAM that the log stack needs, less installed means less attack surface, and it forced me to do everything from the command line, which is the actual skill for managing these. The graphical side comes from Kibana's web console later, not from a desktop sitting on the server.
 
-The clone didn't go clean, so I didn't fight it. I botched something in the second VM's install, and instead of burning an hour debugging a machine I was going to throw away anyway, I just deleted it and built a fresh one. That's the whole point of working in VMs — they're disposable, so rebuilding beats debugging when the box doesn't matter yet. Then I confirmed each VM had its own IP so they wouldn't step on each other.
+The clone didn't go clean, so I didn't fight it. I botched something in the second VM's install, and instead of burning an hour debugging a machine I was going to throw away anyway, I just deleted it and built a fresh one. That's a benefit of working with VMs that they're disposable, so rebuilding beats debugging when the box doesn't matter yet. Then I confirmed each VM had its own IP so they wouldn't step on each other.
 
 ### SIEM Setup (Elasticsearch + Kibana)
 Installed SSH first for sanity. The VMware console has no copy-paste and it's cramped, so I put `openssh-server` on the SIEM box and connected from my host terminal. That's also how real servers get administered, so it's a rep worth having either way.
 
-Elasticsearch + Kibana on the SIEM VM, both from Elastic's apt repo (9.4.4). Elasticsearch throws its security setup and the `elastic` user password on install — grabbed that with the reset-password tool and saved it host-side. Note: lab creds live in a plaintext notes file for convenience; production would use a secrets manager, not this.
+Elasticsearch + Kibana on the SIEM VM, both from Elastic's apt repo (9.4.4). Elasticsearch throws its security setup and the `elastic` user password on install, grabbed that with the reset-password tool and saved it host-side. Note: lab creds live in a plaintext notes file for convenience; production would use a secrets manager, not this.
 
 Kibana wouldn't load over HTTPS. The browser kept throwing a secure-connection error until I realized Kibana was serving its front end over plain HTTP, not HTTPS — so forcing `https` was dropping the connection. Hit it on `http` and it loaded. Worth flagging that a real deployment would put TLS on Kibana or a reverse proxy in front of it; running it on HTTP is a lab shortcut, not something you'd ship.
 
